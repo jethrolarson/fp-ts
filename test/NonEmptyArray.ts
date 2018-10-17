@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import { fold, monoidSum, monoidString } from '../src/Monoid'
-import { NonEmptyArray, nonEmptyArray, fromArray, getSemigroup, group, groupSort } from '../src/NonEmptyArray'
+import { NonEmptyArray, nonEmptyArray, fromArray, getSemigroup, group, groupSort, groupBy } from '../src/NonEmptyArray'
 import { none, option, some } from '../src/Option'
 import { ordNumber } from '../src/Ord'
 import * as F from '../src/Foldable'
@@ -158,5 +158,14 @@ describe('NonEmptyArray', () => {
     const result = new NonEmptyArray(1, [2, 3]).reverse()
     const expected = new NonEmptyArray(3, [2, 1])
     assert.deepEqual(result, expected)
+  })
+
+  it('groupBy', () => {
+    assert.deepEqual(groupBy([], _ => ''), {})
+    assert.deepEqual(groupBy([1], String), { '1': new NonEmptyArray(1, []) })
+    assert.deepEqual(groupBy(['foo', 'bar', 'foobar'], a => String(a.length)), {
+      '3': new NonEmptyArray('foo', ['bar']),
+      '6': new NonEmptyArray('foobar', [])
+    })
   })
 })
